@@ -84,6 +84,93 @@ h1 {
   line-height: 1.55;
 }
 
+.scope-panel {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.scope-copy {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(232, 231, 228, 0.9);
+  border-radius: 14px;
+  padding: 14px 16px;
+  box-shadow: var(--shadow);
+}
+
+.scope-kicker {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 6px;
+}
+
+.scope-note {
+  color: #555;
+  line-height: 1.55;
+}
+
+.scope-grid,
+.insight-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.scope-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.scope-card,
+.insight-card {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: var(--shadow);
+}
+
+.scope-card-alert {
+  border-color: #f7d7d7;
+  background: rgba(255, 248, 248, 0.95);
+}
+
+.scope-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.scope-list,
+.combo-reasons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.scope-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.scope-pill.safe {
+  background: var(--green-bg);
+  color: #12654b;
+}
+
+.scope-pill.private {
+  background: #fff0ef;
+  color: #a33f27;
+}
+
 .section {
   margin-bottom: 28px;
 }
@@ -562,6 +649,23 @@ button.sel-card {
   gap: 18px;
 }
 
+.insight-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 12px;
+}
+
+.insight-value {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 4px 0 5px;
+}
+
+.insight-note {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
 .stat-val {
   font-size: 16px;
   font-weight: 600;
@@ -647,6 +751,10 @@ button.sel-card {
   padding-top: 10px;
 }
 
+.combo-reasons {
+  margin-top: 10px;
+}
+
 .cgrid-val {
   font-size: 12px;
   font-weight: 500;
@@ -701,6 +809,11 @@ button.sel-card {
   }
 
   .combo-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .scope-grid,
+  .insight-grid {
     grid-template-columns: 1fr;
   }
 

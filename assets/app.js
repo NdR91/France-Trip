@@ -1,4 +1,4 @@
-import { FLIGHTS, PARKING_OPTIONS, STAYS, TRIP_META } from "../data/site-data.js";
+import { FLIGHTS, PARKING_OPTIONS, PUBLIC_BOUNDARY, STAYS, TRIP_META } from "../data/site-data.js";
 
 const STORAGE_KEY = "france-trip-comparator-state";
 
@@ -63,6 +63,7 @@ function renderApp() {
   const stayHint = getSelectionHint([...state.stays], STAYS, "stay");
 
   appElement.innerHTML = `
+    ${renderBoundaryPanel()}
     ${renderSelectableSection({
       sectionId: "stays",
       title: "Alloggi - seleziona quelli da confrontare",
@@ -89,6 +90,27 @@ function renderApp() {
   bindInteractions();
   persistState();
   updateMeta();
+}
+
+function renderBoundaryPanel() {
+  return `
+    <section class="scope-panel" aria-label="Perimetro contenuti pubblici">
+      <div class="scope-copy">
+        <p class="scope-kicker">${escapeHtml(TRIP_META.publicScopeLabel)}</p>
+        <p class="scope-note">${escapeHtml(TRIP_META.publicScopeNote)}</p>
+      </div>
+      <div class="scope-grid">
+        <div class="scope-card">
+          <div class="scope-title">Ok sul sito</div>
+          <div class="scope-list">${PUBLIC_BOUNDARY.safe.map((item) => renderScopePill(item, "safe")).join("")}</div>
+        </div>
+        <div class="scope-card scope-card-alert">
+          <div class="scope-title">Da tenere fuori</div>
+          <div class="scope-list">${PUBLIC_BOUNDARY.private.map((item) => renderScopePill(item, "private")).join("")}</div>
+        </div>
+      </div>
+    </section>
+  `;
 }
 
 function updateMeta() {
@@ -381,6 +403,7 @@ function renderResultsSection() {
   const max = Math.max(...totals);
   const parking = getParkingOption(state.parking);
   const selectedChipHtml = getSelectedChips();
+  const insights = getComparisonInsights(combos);
 
   return `
     <section class="section">
@@ -405,6 +428,11 @@ function renderResultsSection() {
           <div><div class="stat-lbl">minimo</div><div class="stat-val blue">${formatMoneyRounded(min)}</div></div>
           <div><div class="stat-lbl">massimo</div><div class="stat-val">${formatMoneyRounded(max)}</div></div>
           <div><div class="stat-lbl">parcheggio</div><div class="stat-val" style="color:var(--orange)">${parking.cost > 0 ? formatMoneyDecimal(parking.cost) : "no"}</div></div>
+          <div><div class="stat-lbl">spread</div><div class="stat-val">${formatMoneyRounded(max - min)}</div></div>
+        </div>
+
+        <div class="insight-grid">
+          ${insights.map(renderInsightCard).join("")}
         </div>
 
         <div class="combo-list">
@@ -455,6 +483,8 @@ function renderNeedMoreState(hasFlights, hasStays) {
 }
 
 function renderComboCard(combo, isBest) {
+  const reasons = getComboReasons(combo);
+
   return `
     <article class="combo-card ${isBest ? "best-card" : ""}">
       <div class="combo-top">
@@ -478,15 +508,21 @@ function renderComboCard(combo, isBest) {
         <div>
           <div class="stat-lbl">Voli</div>
           <div class="cgrid-val">${formatMoneyDecimal(combo.flight.totalCost)}</div>
+          <div class="cgrid-note">${escapeHtml(combo.flight.flexibilityLabel)}</div>
         </div>
         <div>
           <div class="stat-lbl">Alloggio</div>
           <div class="cgrid-val">${formatMoneyDecimal(combo.stay.totalCost)}</div>
+          <div class="cgrid-note">${escapeHtml(combo.stay.flexibilityLabel)}</div>
         </div>
         <div>
           <div class="stat-lbl">A Disneyland</div>
           <div class="cgrid-note">${escapeHtml(combo.stay.destinationNote)}</div>
         </div>
+      </div>
+
+      <div class="combo-reasons">
+        ${reasons.map((reason) => `<span class="summary-pill">${escapeHtml(reason)}</span>`).join("")}
       </div>
 
       <div class="combo-footer">
@@ -519,11 +555,13 @@ function getVisibleCombos() {
         .filter((stay) => state.stays.has(stay.id))
         .map((stay) => {
           const extraParking = flight.airportParkingNeeded ? parking.cost : 0;
+          const convenienceScore = flight.travelConvenienceScore + stay.disneyAccessScore + stay.flexibilityScore + flight.flexibilityScore;
           return {
             id: `${flight.id}-${stay.id}`,
             flight,
             stay,
             extraParking,
+            convenienceScore,
             total: flight.totalCost + stay.totalCost + extraParking,
           };
         });
@@ -536,6 +574,53 @@ function getVisibleCombos() {
 
     return right.total - left.total;
   });
+}
+
+function getComparisonInsights(combos) {
+  if (!combos.length) {
+    return [];
+  }
+
+  const cheapest = combos[0];
+  const mostComfortable = [...combos].sort((left, right) => right.convenienceScore - left.convenienceScore || left.total - right.total)[0];
+  const bestDisney = [...combos].sort((left, right) => right.stay.disneyAccessScore - left.stay.disneyAccessScore || left.total - right.total)[0];
+
+  return [
+    {
+      title: "Piu economica",
+      value: formatMoneyRounded(cheapest.total),
+      note: `${cheapest.flight.label} + ${cheapest.stay.label}`,
+    },
+    {
+      title: "Piu comoda",
+      value: `${mostComfortable.flight.label} + ${mostComfortable.stay.label}`,
+      note: "Miglior equilibrio tra comodita' volo, flessibilita' e accesso ai parchi.",
+    },
+    {
+      title: "Disney piu semplice",
+      value: bestDisney.stay.label,
+      note: bestDisney.stay.parisAccessLabel,
+    },
+  ];
+}
+
+function renderInsightCard(insight) {
+  return `
+    <article class="insight-card">
+      <div class="stat-lbl">${escapeHtml(insight.title)}</div>
+      <div class="insight-value">${escapeHtml(insight.value)}</div>
+      <div class="insight-note">${escapeHtml(insight.note)}</div>
+    </article>
+  `;
+}
+
+function getComboReasons(combo) {
+  return [
+    combo.flight.flexibilityLabel,
+    combo.flight.parkingImpactLabel,
+    combo.stay.parisAccessLabel,
+    combo.stay.pros[0],
+  ];
 }
 
 function getSelectionHint(selectedIds, items, type) {
@@ -579,6 +664,10 @@ function renderSelectableChip(type, id, label) {
       <button class="sel-chip-x" data-remove-chip="${id}" data-remove-chip-type="${type}" type="button" aria-label="Rimuovi ${escapeHtml(label)}">✕</button>
     </span>
   `;
+}
+
+function renderScopePill(text, type) {
+  return `<span class="scope-pill ${type}">${escapeHtml(text)}</span>`;
 }
 
 function getParkingOption(id) {
