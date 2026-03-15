@@ -404,10 +404,11 @@ function renderResultsSection() {
   const parking = getParkingOption(state.parking);
   const selectedChipHtml = getSelectedChips();
   const insights = getComparisonInsights(combos);
+  const hasSingleCombo = combos.length === 1;
 
   return `
-    <section class="section">
-      <div class="section-head" style="cursor:default;margin-bottom:12px">
+    <section class="section results-block ${hasSingleCombo ? "results-block-single" : ""}">
+      <div class="section-head results-head" style="cursor:default;margin-bottom:12px">
         <div class="section-head-left">
           <span class="section-title">Combinazioni</span>
           <span class="section-hint">Confronto ordinato per prezzo totale, con parcheggio applicato solo ai voli da Bologna.</span>
@@ -415,31 +416,61 @@ function renderResultsSection() {
         <button class="section-action" data-sort-toggle type="button">${state.sortAsc ? "ordina per prezzo ↑" : "ordina per prezzo ↓"}</button>
       </div>
 
-      <div id="results-section">
+      <div id="results-section" class="results-shell">
         <div class="sel-bar">
-          <span class="sel-bar-label">Nel confronto</span>
-          <div class="sel-chips">${selectedChipHtml}</div>
-          <button class="ghost-button" data-select-all type="button">Seleziona tutti</button>
-          <button class="ghost-button" data-reset type="button">Reset</button>
+          <div class="sel-bar-main">
+            <span class="sel-bar-label">Nel confronto</span>
+            <div class="sel-chips">${selectedChipHtml}</div>
+          </div>
+          <div class="sel-bar-actions">
+            <button class="ghost-button" data-select-all type="button">Seleziona tutti</button>
+            <button class="ghost-button" data-reset type="button">Reset</button>
+          </div>
         </div>
 
-        <div class="summary-bar">
-          <div><div class="stat-lbl">combinazioni</div><div class="stat-val">${combos.length}</div></div>
-          <div><div class="stat-lbl">minimo</div><div class="stat-val blue">${formatMoneyRounded(min)}</div></div>
-          <div><div class="stat-lbl">massimo</div><div class="stat-val">${formatMoneyRounded(max)}</div></div>
-          <div><div class="stat-lbl">parcheggio</div><div class="stat-val" style="color:var(--orange)">${parking.cost > 0 ? formatMoneyDecimal(parking.cost) : "no"}</div></div>
-          <div><div class="stat-lbl">spread</div><div class="stat-val">${formatMoneyRounded(max - min)}</div></div>
-        </div>
-
-        <div class="insight-grid">
-          ${insights.map(renderInsightCard).join("")}
-        </div>
+        ${renderSummaryArea({ combos, hasSingleCombo, min, max, parking, insights })}
 
         <div class="combo-list">
           ${combos.map((combo, index) => renderComboCard(combo, index === 0 && combos.length > 1)).join("")}
         </div>
       </div>
     </section>
+  `;
+}
+
+function renderSummaryArea({ combos, hasSingleCombo, min, max, parking, insights }) {
+  if (hasSingleCombo) {
+    const combo = combos[0];
+    return `
+      <div class="summary-bar summary-bar-single">
+        <div>
+          <div class="stat-lbl">selezione corrente</div>
+          <div class="stat-val blue">${formatMoneyRounded(combo.total)}</div>
+        </div>
+        <div>
+          <div class="stat-lbl">per persona</div>
+          <div class="stat-val">${formatMoneyRounded(Math.round(combo.total / TRIP_META.peopleCount))}</div>
+        </div>
+        <div>
+          <div class="stat-lbl">parcheggio</div>
+          <div class="stat-val" style="color:var(--orange)">${parking.cost > 0 ? formatMoneyDecimal(parking.cost) : "no"}</div>
+        </div>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="summary-bar">
+      <div><div class="stat-lbl">combinazioni</div><div class="stat-val">${combos.length}</div></div>
+      <div><div class="stat-lbl">minimo</div><div class="stat-val blue">${formatMoneyRounded(min)}</div></div>
+      <div><div class="stat-lbl">massimo</div><div class="stat-val">${formatMoneyRounded(max)}</div></div>
+      <div><div class="stat-lbl">parcheggio</div><div class="stat-val" style="color:var(--orange)">${parking.cost > 0 ? formatMoneyDecimal(parking.cost) : "no"}</div></div>
+      <div><div class="stat-lbl">spread</div><div class="stat-val">${formatMoneyRounded(max - min)}</div></div>
+    </div>
+
+    <div class="insight-grid">
+      ${insights.map(renderInsightCard).join("")}
+    </div>
   `;
 }
 

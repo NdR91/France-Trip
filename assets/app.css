@@ -74,14 +74,14 @@ h1 {
   background: rgba(255, 255, 255, 0.75);
   border: 1px solid rgba(232, 231, 228, 0.9);
   border-radius: 14px;
-  padding: 14px 16px;
-  margin-bottom: 20px;
+  padding: 11px 14px;
+  margin-bottom: 14px;
   box-shadow: var(--shadow);
 }
 
 .roadmap-note p {
   color: #555;
-  line-height: 1.55;
+  line-height: 1.45;
 }
 
 .scope-panel {
@@ -172,7 +172,7 @@ h1 {
 }
 
 .section {
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 
 .section-head {
@@ -288,7 +288,11 @@ button.sel-card {
 }
 
 .sel-card.unselected {
-  opacity: 0.56;
+  opacity: 0.82;
+}
+
+.sel-card.unselected .card-status.excluded {
+  color: #c2c2c2;
 }
 
 .check-badge {
@@ -602,6 +606,22 @@ button.sel-card {
   flex-wrap: wrap;
 }
 
+.sel-bar-main {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  flex: 1 1 420px;
+}
+
+.sel-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+
 .sel-bar-label,
 .stat-lbl {
   font-size: 9px;
@@ -640,7 +660,6 @@ button.sel-card {
   font-size: 11px;
   color: var(--blue);
   padding: 4px 0;
-  margin-left: auto;
 }
 
 .summary-bar {
@@ -681,6 +700,35 @@ button.sel-card {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.results-block {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.36), rgba(255, 255, 255, 0));
+  border: 1px solid rgba(24, 95, 165, 0.08);
+  border-radius: 18px;
+  padding: 14px;
+}
+
+.results-head {
+  margin-bottom: 14px !important;
+}
+
+.results-shell {
+  display: grid;
+  gap: 12px;
+}
+
+.results-block .section-title {
+  color: var(--blue);
+}
+
+.results-block .section-action {
+  font-weight: 600;
+}
+
+.summary-bar-single {
+  background: linear-gradient(135deg, rgba(24, 95, 165, 0.08), rgba(255, 255, 255, 0.96));
+  border-color: rgba(24, 95, 165, 0.16);
 }
 
 .combo-card {
@@ -797,9 +845,40 @@ button.sel-card {
     padding: 18px 14px 40px;
   }
 
+  .roadmap-note {
+    padding: 10px 12px;
+    margin-bottom: 10px;
+  }
+
   .combo-top,
   .section-head {
     flex-direction: column;
+  }
+
+  .results-block {
+    padding: 12px;
+  }
+
+  .sel-bar {
+    gap: 10px;
+  }
+
+  .sel-bar-main {
+    flex-basis: 100%;
+  }
+
+  .sel-bar-actions {
+    width: 100%;
+    justify-content: flex-end;
+    gap: 16px;
+  }
+
+  .sel-chips {
+    width: 100%;
+  }
+
+  .sel-chip {
+    max-width: 100%;
   }
 
   .combo-total-val,
@@ -818,10 +897,6 @@ button.sel-card {
   }
 
   .combo-park-note {
-    margin-left: 0;
-  }
-
-  .ghost-button {
     margin-left: 0;
   }
 }
