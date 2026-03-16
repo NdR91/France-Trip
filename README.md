@@ -7,6 +7,7 @@ Comparatore statico per valutare rapidamente le opzioni di volo, alloggio e parc
 - confronto combinazioni volo + alloggio + parcheggio
 - ordinamento per prezzo totale
 - selezioni persistite in `localStorage`
+- condivisione del confronto via URL
 - sintesi decisionale con opzione piu economica, piu comoda e logistica Disneyland
 - struttura pronta per pubblicazione su GitHub Pages
 
@@ -18,9 +19,11 @@ Comparatore statico per valutare rapidamente le opzioni di volo, alloggio e parc
 
 - `index.html` - shell della pagina
 - `assets/app.css` - stile del comparatore
-- `assets/app.js` - rendering UI e logica client-side
+- `assets/app.js` - entrypoint client-side minimale
+- `assets/app/` - moduli per stato, URL sharing, rendering e logica dominio
 - `data/site-data.js` - dati di viaggio separati dalla UI
 - `.github/workflows/deploy-pages.yml` - deploy automatico su GitHub Pages
+- `PUBLIC-PRIVATE-BOUNDARY.md` - regole operative tra bundle pubblico e planner futuro
 
 ## Mini Roadmap
 
@@ -58,7 +61,7 @@ Comparatore statico per valutare rapidamente le opzioni di volo, alloggio e parc
 
 ## Confine pubblico / privato
 
-Questo repository oggi pubblica un sito statico completo tramite GitHub Pages. Di conseguenza, tutto cio' che finisce nei file deployati (`index.html`, `assets/`, `data/`) e' da considerare pubblico.
+Questo repository oggi pubblica su GitHub Pages solo il bundle pubblico preparato in CI. Di conseguenza, tutto cio' che finisce nei file deployati (`index.html`, `assets/`, `data/`) e' da considerare pubblico.
 
 ### Contenuti adatti al sito condivisibile
 
@@ -73,7 +76,7 @@ Questo repository oggi pubblica un sito statico completo tramite GitHub Pages. D
 - nomi completi, contatti, assegnazioni camere o posti
 - documenti, dati di minori identificabili e dettagli operativi sensibili
 
-Quando il progetto evolvera' oltre il comparatore, questi contenuti dovranno vivere fuori dal pacchetto statico pubblico o dietro un sistema di accesso dedicato.
+Quando il progetto evolvera' oltre il comparatore, questi contenuti dovranno vivere fuori dal pacchetto statico pubblico o dietro un sistema di accesso dedicato. Le regole operative sono raccolte in `PUBLIC-PRIVATE-BOUNDARY.md`.
 
 ### V2 - ponte verso travel planner
 
@@ -87,5 +90,6 @@ Quando il progetto evolvera' oltre il comparatore, questi contenuti dovranno viv
 2. In GitHub vai su `Settings > Pages`
 3. Seleziona `GitHub Actions` come source
 4. Ogni push su `main` e ogni release pubblicata avvieranno il deploy
+5. Il workflow prepara e pubblica solo il bundle pubblico (`index.html`, `assets/`, `data/`)
 
 L'URL finale sara' qualcosa come `https://ndr91.github.io/France-Trip/`.

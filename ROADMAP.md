@@ -6,7 +6,10 @@ Roadmap implementativa del comparatore, costruita sul backlog attuale e su una r
 
 - motore di confronto statico funzionante per voli, alloggi e parcheggio
 - deploy automatico su GitHub Pages
+- deploy Pages ristretto al solo bundle pubblico preparato in CI
 - immagini alloggi integrate nelle card
+- stato condivisibile via URL per il confronto pubblico
+- `assets/app.js` spezzato in moduli piu piccoli
 - principali regressioni recenti corrette: layout card, intro superflua, reset del carosello mobile
 
 ## Diagnosi sintetica
