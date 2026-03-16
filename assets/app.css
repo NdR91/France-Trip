@@ -403,29 +403,35 @@ button.sel-card {
 
 .fcard-brand {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 2px;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.fcard-brand-copy {
+  min-width: 0;
+  padding-top: 1px;
 }
 
 .fcard-logo,
 .fcard-logo-fallback {
-  width: 36px;
-  height: 36px;
+  width: 52px;
+  height: 40px;
   flex-shrink: 0;
-  border-radius: 8px;
+  border-radius: 10px;
   object-fit: contain;
   object-position: center;
-  padding: 4px;
+  padding: 5px 6px;
   border: 1px solid rgba(0, 0, 0, 0.06);
   background: rgba(255, 255, 255, 0.96);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
 .fcard-logo-fallback {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   color: var(--blue);
 }
@@ -439,6 +445,11 @@ button.sel-card {
   padding-right: 24px;
 }
 
+.fcard-name {
+  font-size: 13px;
+  line-height: 1.25;
+}
+
 .hcard-loc,
 .fcard-sub,
 .pcard-type,
@@ -447,12 +458,6 @@ button.sel-card {
   font-size: 10px;
   color: var(--muted);
   line-height: 1.45;
-}
-
-.fcard-brand-sub {
-  font-size: 9px;
-  color: var(--label-strong);
-  line-height: 1.35;
 }
 
 .hcard-loc,
@@ -608,8 +613,8 @@ button.sel-card {
 }
 
 .fcard {
-  min-width: 182px;
-  max-width: 182px;
+  min-width: 208px;
+  max-width: 208px;
 }
 
 .pcard {
@@ -1055,6 +1060,11 @@ button.sel-card {
   .hcard {
     min-width: 260px;
     max-width: 260px;
+  }
+
+  .fcard {
+    min-width: 224px;
+    max-width: 224px;
   }
 
   .hcard-media {

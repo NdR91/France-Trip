@@ -113,9 +113,8 @@ function renderFlightCard(state, flight) {
       <span class="check-badge">${checkIcon()}</span>
       <div class="fcard-brand">
         ${logo}
-        <div>
+        <div class="fcard-brand-copy">
           <div class="fcard-name">${escapeHtml(flight.label)}</div>
-          <div class="fcard-brand-sub">${escapeHtml(flight.airlineLabel || flight.label)}</div>
         </div>
       </div>
       <div class="fcard-sub">${escapeHtml(flight.route)} · ${escapeHtml(flight.departureCity)}</div>
