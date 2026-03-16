@@ -82,7 +82,7 @@ function renderApp() {
     ${renderSelectableSection({
       sectionId: "parking",
       title: "Parcheggio BLQ · 5gg × 2 auto",
-      hint: "Solo per AF Base / AF Full - tocca per selezionare",
+      hint: "Solo con AF Base / AF Full - tocca per selezionare",
       cards: PARKING_OPTIONS.map((parking) => renderParkingCard(parking)).join(""),
       footnote: "Con EasyJet partite da Milano Linate - parcheggio non necessario a Bologna.",
     })}
@@ -112,11 +112,11 @@ function renderTopDecisionBanner() {
   return `
     <section class="top-decision">
       <div>
-        <div class="top-decision-label">Decisione rapida</div>
+        <div class="top-decision-label">Scelta migliore ora</div>
         <div class="top-decision-value">${formatMoneyRounded(bestCombo.total)} - ${escapeHtml(bestCombo.flight.label)} + ${escapeHtml(bestCombo.stay.label)}</div>
-        <div class="top-decision-note">Miglior prezzo attuale con ${comboCountLabel} nel confronto.</div>
+        <div class="top-decision-note">Prezzo piu basso tra ${comboCountLabel} gia' selezionate.</div>
       </div>
-      <a class="top-decision-link" href="#results-section">Vai al confronto</a>
+      <a class="top-decision-link" href="#results-section">Apri combinazioni</a>
     </section>
   `;
 }
@@ -443,15 +443,15 @@ function renderResultsSection() {
       <div class="section-head results-head" style="cursor:default;margin-bottom:12px">
         <div class="section-head-left">
           <span class="section-title">Combinazioni</span>
-          <span class="section-hint">Confronto ordinato per prezzo totale, con parcheggio applicato solo ai voli da Bologna.</span>
+          <span class="section-hint">Totale viaggio, con parcheggio aggiunto solo ai voli da Bologna.</span>
         </div>
-        <button class="section-action" data-sort-toggle type="button">${state.sortAsc ? "ordina per prezzo ↑" : "ordina per prezzo ↓"}</button>
+        <button class="section-action" data-sort-toggle type="button">${state.sortAsc ? "prezzo ↑" : "prezzo ↓"}</button>
       </div>
 
       <div id="results-section" class="results-shell">
         <div class="sel-bar">
           <div class="sel-bar-main">
-            <span class="sel-bar-label">Nel confronto</span>
+            <span class="sel-bar-label">Selezionati</span>
             <div class="sel-chips">${selectedChipHtml}</div>
           </div>
           <div class="sel-bar-actions">
@@ -657,10 +657,10 @@ function getComparisonInsights(combos) {
     {
       title: "Piu comoda",
       value: `${mostComfortable.flight.label} + ${mostComfortable.stay.label}`,
-      note: "Miglior equilibrio tra comodita' volo, flessibilita' e accesso ai parchi.",
+      note: "Equilibrio migliore tra volo, flessibilita' e accesso ai parchi.",
     },
     {
-      title: "Disney piu semplice",
+      title: "Disney piu facile",
       value: bestDisney.stay.label,
       note: bestDisney.stay.parisAccessLabel,
     },
@@ -688,7 +688,7 @@ function getComboReasons(combo) {
 
 function getSelectionHint(selectedIds, items, type) {
   if (!selectedIds.length) {
-    return "Nessuno selezionato · tocca le card per includerle";
+    return "Nessuna selezione · tocca le card da includere";
   }
 
   if (selectedIds.length === items.length) {
