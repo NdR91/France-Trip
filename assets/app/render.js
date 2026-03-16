@@ -104,8 +104,9 @@ function renderFlightCard(state, flight) {
   const selected = state.flights.has(flight.id);
   const statusClass = selected ? "included" : "excluded";
   const statusLabel = selected ? "in confronto" : "escluso";
+  const logoClass = getFlightLogoClass(flight.id);
   const logo = flight.logo
-    ? `<img class="fcard-logo" src="${flight.logo}" alt="${escapeHtml(flight.airlineLabel || flight.label)}">`
+    ? `<img class="fcard-logo ${logoClass}" src="${flight.logo}" alt="${escapeHtml(flight.airlineLabel || flight.label)}">`
     : `<span class="fcard-logo-fallback">${escapeHtml((flight.airlineLabel || flight.label).slice(0, 2).toUpperCase())}</span>`;
 
   return `
@@ -129,6 +130,18 @@ function renderFlightCard(state, flight) {
       <div class="card-status ${statusClass}">${statusLabel}</div>
     </article>
   `;
+}
+
+function getFlightLogoClass(flightId) {
+  if (flightId === "easyjet") {
+    return "is-easyjet";
+  }
+
+  if (flightId.startsWith("af-")) {
+    return "is-air-france";
+  }
+
+  return "";
 }
 
 function renderParkingCard(state, parking) {
