@@ -22,10 +22,10 @@ Contenuti da escludere:
 ## URL sharing
 
 La condivisione via URL introdotta nel comparatore deve contenere solo:
-- voli selezionati
-- alloggi selezionati
-- parcheggio selezionato
-- ordinamento del confronto
+- `f` - id dei voli selezionati
+- `s` - id degli alloggi selezionati
+- `p` - id del parcheggio selezionato
+- `sort` - ordinamento del confronto
 
 Non deve contenere:
 - note libere
@@ -35,7 +35,7 @@ Non deve contenere:
 
 ## Deploy pubblico
 
-Il workflow GitHub Pages pubblica solo il bundle pubblico preparato in CI.
+Il workflow GitHub Pages pubblica solo il bundle pubblico preparato in CI. Durante la build il deploy riscrive le versioni degli asset statici per ridurre i problemi di cache dopo gli aggiornamenti.
 
 Bundle pubblico consentito:
 - `index.html`
@@ -46,7 +46,7 @@ Tutto il resto del repository e' escluso dall'artefatto Pages.
 
 ## Prossimo passo per la futura area privata
 
-Quando il progetto uscira' dalla sola comparazione, il planner dovra' vivere in una superficie separata:
+Oggi il confine pubblico e' gia' attivo e applicato nel deploy. Quando il progetto uscira' dalla sola comparazione, il planner dovra' vivere in una superficie separata:
 - repo privata o cartella/app separata
 - deploy protetto
 - eventuali segreti e dati operativi fuori dal bundle statico pubblico

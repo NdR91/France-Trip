@@ -7,9 +7,13 @@ Roadmap implementativa del comparatore, costruita sul backlog attuale e su una r
 - motore di confronto statico funzionante per voli, alloggi e parcheggio
 - deploy automatico su GitHub Pages
 - deploy Pages ristretto al solo bundle pubblico preparato in CI
+- anti-cache lato deploy aggiunto per rendere piu' affidabili gli aggiornamenti pubblicati
 - immagini alloggi integrate nelle card
 - stato condivisibile via URL per il confronto pubblico
 - `assets/app.js` spezzato in moduli piu piccoli
+- sezioni collassabili con ripristino dello scroll orizzontale
+- card volo rifinite con loghi, durata, scali e naming piu' chiaro
+- parcheggi BLQ allineati ai voli in partenza da Bologna con selezione disabilitata quando non applicabile
 - principali regressioni recenti corrette: layout card, intro superflua, reset del carosello mobile
 
 ## Diagnosi sintetica
@@ -71,8 +75,8 @@ Roadmap implementativa del comparatore, costruita sul backlog attuale e su una r
 
 ### P2 - Manutenibilita' e feature abilitative
 
-- modularizzare `assets/app.js` separando rendering, stato e helper
-- aggiungere condivisione via URL delle selezioni
+- consolidare il refactor modulare mantenendo rendering, stato e helper coerenti
+- estendere la condivisione via URL solo se servono shortlist o viste salvate piu' ricche
 - valutare shortlist o preferiti condivisibili
 
 ### P3 - Evoluzione futura
@@ -124,14 +128,14 @@ Obiettivo: aumentare chiarezza e tono di prodotto.
 
 Obiettivo: preparare il codice e il prodotto alla prossima ondata di evoluzione.
 
-- spezzare `assets/app.js` in moduli piu' semplici
-- introdurre URL sharing
+- consolidare la struttura modulare gia' introdotta
+- mantenere stabile l'URL sharing pubblico e minimale
 - preparare il confine tra comparatore pubblico e planner privato
 
 ## Prossimo step consigliato
 
-Partire dalla Fase 1 con un intervento mirato su mobile:
+Partire dalla Fase 1 con un intervento mirato sulla UX mobile residua:
 
 1. prototipo di card stay mobile piu' compatta
-2. revisione del blocco `Nel confronto` per molte selezioni
-3. decisione finale tra carosello e lista verticale
+2. revisione del blocco `Nel confronto` e degli stati parcheggio disabilitati per molte selezioni
+3. review cross-device finale su caroselli, leggibilita' e density

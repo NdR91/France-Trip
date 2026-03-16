@@ -19,8 +19,12 @@ function buildParams(state) {
     params.set("s", stays.join(","));
   }
 
-  if (state.parking !== "no") {
-    params.set("p", state.parking);
+  if (state.parking.BLQ !== "no-blq") {
+    params.set("pb", state.parking.BLQ);
+  }
+
+  if (state.parking.LIN !== "no-lin") {
+    params.set("pl", state.parking.LIN);
   }
 
   if (!state.sortAsc) {
@@ -45,9 +49,21 @@ export function parseUrlState(search, datasets) {
     patch.stays = parseList(params.get("s"), stayIds);
   }
 
-  if (params.has("p")) {
+  if (params.has("pb") || params.has("pl") || params.has("p")) {
+    patch.parking = {};
+  }
+
+  if (params.has("pb")) {
+    const parking = params.get("pb");
+    patch.parking.BLQ = parkingIds.has(parking) ? parking : "no-blq";
+  } else if (params.has("p")) {
     const parking = params.get("p");
-    patch.parking = parkingIds.has(parking) ? parking : "no";
+    patch.parking.BLQ = parkingIds.has(parking) ? parking : "no-blq";
+  }
+
+  if (params.has("pl")) {
+    const parking = params.get("pl");
+    patch.parking.LIN = parkingIds.has(parking) ? parking : "no-lin";
   }
 
   if (params.has("sort")) {

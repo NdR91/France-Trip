@@ -6,21 +6,32 @@ export function hasParkingEligibleFlight(state, flights) {
   return flights.some((flight) => state.flights.has(flight.id) && flight.airportParkingNeeded);
 }
 
-export function getVisibleCombos({ state, flights, stays, parkingOptions }) {
-  const parking = getParkingOption(state.parking, parkingOptions);
+export function hasParkingEligibleFlightForAirport(state, flights, airport) {
+  return flights.some(
+    (flight) => state.flights.has(flight.id) && flight.airportParkingNeeded && flight.departureAirport === airport,
+  );
+}
 
+export function getSelectedParkingForFlight(state, flight, parkingOptions) {
+  const parkingId = state.parking[flight.departureAirport];
+  return getParkingOption(parkingId, parkingOptions);
+}
+
+export function getVisibleCombos({ state, flights, stays, parkingOptions }) {
   const combos = flights
     .filter((flight) => state.flights.has(flight.id))
     .flatMap((flight) => {
       return stays
         .filter((stay) => state.stays.has(stay.id))
         .map((stay) => {
+          const parking = getSelectedParkingForFlight(state, flight, parkingOptions);
           const extraParking = flight.airportParkingNeeded ? parking.cost : 0;
           const convenienceScore = flight.travelConvenienceScore + stay.disneyAccessScore + stay.flexibilityScore + flight.flexibilityScore;
           return {
             id: `${flight.id}-${stay.id}`,
             flight,
             stay,
+            parking,
             extraParking,
             convenienceScore,
             total: flight.totalCost + stay.totalCost + extraParking,

@@ -8,8 +8,12 @@ Comparatore statico per valutare rapidamente le opzioni di volo, alloggio e parc
 - ordinamento per prezzo totale
 - selezioni persistite in `localStorage`
 - condivisione del confronto via URL
+- sezioni collassabili con stato mantenuto in pagina
+- banner con scelta migliore corrente e area risultati piu' leggibile
+- parcheggi BLQ applicati solo ai voli in partenza da Bologna
+- card volo con loghi compagnia, durata e scali
 - sintesi decisionale con opzione piu economica, piu comoda e logistica Disneyland
-- struttura pronta per pubblicazione su GitHub Pages
+- struttura modulare pronta per pubblicazione su GitHub Pages
 
 ## Roadmap
 
@@ -36,8 +40,15 @@ Comparatore statico per valutare rapidamente le opzioni di volo, alloggio e parc
 ### V1.1 - decisione ferie piu solida
 
 - aggiungere campi come flessibilita', tempi di trasferimento, note bambini, punteggio sintetico
-- salvare o condividere un confronto via URL
+- salvare e condividere un confronto via URL
 - evidenziare meglio pro e contro di ogni opzione
+
+### V1.2 - rifinitura del comparatore pubblico
+
+- naming voli piu' chiaro e card volo piu' leggibili
+- logica parcheggi coerente con l'aeroporto di partenza
+- deploy pubblico con anti-cache piu' robusto
+- confine pubblico/privato reso esplicito nella documentazione
 
 ## Backlog operativo
 
@@ -46,12 +57,13 @@ Comparatore statico per valutare rapidamente le opzioni di volo, alloggio e parc
 - mantenere aggiornati prezzi, link e note delle opzioni in `data/site-data.js`
 - tenere pubblici solo contenuti adatti a un sito statico condivisibile
 - rifinire il confronto man mano che emergono nuove alternative
+- completare la prossima passata di UX mobile su densita', caroselli e stati disabilitati
 
 ### Dopo
 
-- aggiungere condivisione del confronto via URL
 - introdurre shortlist e preferiti per il gruppo
 - aggiungere campi specifici per famiglie, transfer e ritmo giornaliero
+- aggiungere parcheggi dedicati alle partenze da Milano
 
 ### Piu avanti
 
@@ -62,6 +74,8 @@ Comparatore statico per valutare rapidamente le opzioni di volo, alloggio e parc
 ## Confine pubblico / privato
 
 Questo repository oggi pubblica su GitHub Pages solo il bundle pubblico preparato in CI. Di conseguenza, tutto cio' che finisce nei file deployati (`index.html`, `assets/`, `data/`) e' da considerare pubblico.
+
+La condivisione via URL oggi include solo gli id delle selezioni (`f`, `s`, `p`) e l'ordinamento (`sort`). Non contiene note libere, dati personali o dettagli operativi.
 
 ### Contenuti adatti al sito condivisibile
 
@@ -89,7 +103,8 @@ Quando il progetto evolvera' oltre il comparatore, questi contenuti dovranno viv
 1. Carica questi file nella repo `NdR91/France-Trip`
 2. In GitHub vai su `Settings > Pages`
 3. Seleziona `GitHub Actions` come source
-4. Ogni push su `main` e ogni release pubblicata avvieranno il deploy
+4. Ogni push su `main`, ogni release pubblicata e il trigger manuale possono avviare il deploy
 5. Il workflow prepara e pubblica solo il bundle pubblico (`index.html`, `assets/`, `data/`)
+6. In CI gli asset statici ricevono una versione di deploy per ridurre i problemi di cache lato browser
 
 L'URL finale sara' qualcosa come `https://ndr91.github.io/France-Trip/`.

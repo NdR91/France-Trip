@@ -1,6 +1,6 @@
 import { FLIGHTS, PARKING_OPTIONS, STAYS, TRIP_META } from "../../data/site-data.js";
 import { renderAppView } from "./render.js";
-import { loadState, mergeState, persistState } from "./state.js";
+import { createDefaultState, loadState, mergeState, persistState } from "./state.js";
 import { buildShareUrl, parseUrlState, syncUrlState } from "./url-state.js";
 import { copyText, isKeyboardToggle } from "./utils.js";
 
@@ -73,7 +73,12 @@ function handleClick(event) {
     if (parkingCard.dataset.parkingDisabled === "true") {
       return;
     }
-    state = mergeState(state, { parking: parkingCard.dataset.parkingId }, datasets);
+    state = mergeState(state, {
+      parking: {
+        ...state.parking,
+        [parkingCard.dataset.parkingAirport]: parkingCard.dataset.parkingId,
+      },
+    }, datasets);
     renderApp();
     return;
   }
@@ -88,12 +93,7 @@ function handleClick(event) {
   }
 
   if (target.closest("[data-reset]")) {
-    state = mergeState(state, {
-      flights: [],
-      stays: [],
-      parking: "no",
-      sortAsc: true,
-    }, datasets);
+    state = mergeState(state, createDefaultState(), datasets);
     renderApp();
     return;
   }
@@ -144,7 +144,12 @@ function handleKeyDown(event) {
     if (card.dataset.parkingDisabled === "true") {
       return;
     }
-    state = mergeState(state, { parking: card.dataset.parkingId }, datasets);
+    state = mergeState(state, {
+      parking: {
+        ...state.parking,
+        [card.dataset.parkingAirport]: card.dataset.parkingId,
+      },
+    }, datasets);
   }
 
   renderApp();
