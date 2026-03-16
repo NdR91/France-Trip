@@ -404,8 +404,8 @@ button.sel-card {
 .fcard-brand {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  margin-bottom: 4px;
+  gap: 12px;
+  margin-bottom: 6px;
 }
 
 .fcard-brand-copy {
@@ -415,13 +415,13 @@ button.sel-card {
 
 .fcard-logo,
 .fcard-logo-fallback {
-  width: 52px;
-  height: 40px;
+  width: 64px;
+  height: 48px;
   flex-shrink: 0;
   border-radius: 10px;
   object-fit: contain;
   object-position: center;
-  padding: 5px 6px;
+  padding: 6px 8px;
   border: 1px solid rgba(0, 0, 0, 0.06);
   background: rgba(255, 255, 255, 0.96);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
@@ -446,7 +446,7 @@ button.sel-card {
 }
 
 .fcard-name {
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.25;
 }
 
@@ -489,8 +489,12 @@ button.sel-card {
   line-height: 1.45;
 }
 
+.fcard-row + .fcard-row {
+  margin-top: 1px;
+}
+
 .fcard-meta {
-  margin-top: 6px;
+  margin-top: 8px;
 }
 
 .fcard-meta-row {
@@ -500,7 +504,7 @@ button.sel-card {
   font-size: 10px;
   color: var(--ink-soft);
   line-height: 1.4;
-  margin-bottom: 3px;
+  margin-bottom: 4px;
 }
 
 .kv {
@@ -540,6 +544,10 @@ button.sel-card {
 .pcard .kv:last-of-type,
 .pcard .pcard-note:last-of-type {
   margin-bottom: 0;
+}
+
+.fcard .pills {
+  margin-top: 10px;
 }
 
 .pill,
@@ -613,8 +621,8 @@ button.sel-card {
 }
 
 .fcard {
-  min-width: 208px;
-  max-width: 208px;
+  min-width: 220px;
+  max-width: 220px;
 }
 
 .pcard {
@@ -1063,8 +1071,30 @@ button.sel-card {
   }
 
   .fcard {
-    min-width: 224px;
-    max-width: 224px;
+    min-width: 252px;
+    max-width: 252px;
+    padding: 14px;
+  }
+
+  .fcard-logo,
+  .fcard-logo-fallback {
+    width: 72px;
+    height: 54px;
+  }
+
+  .fcard-name {
+    font-size: 14px;
+  }
+
+  .fcard-sub,
+  .fcard-ppp,
+  .fcard-row,
+  .fcard-meta-row {
+    font-size: 9px;
+  }
+
+  .fcard .pill:nth-child(n + 4) {
+    display: none;
   }
 
   .hcard-media {

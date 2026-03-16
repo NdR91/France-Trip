@@ -187,9 +187,9 @@ export const FLIGHTS = [
     watchouts: ["molto piu costoso", "parcheggio da aggiungere"],
     pills: [
       { text: "diretto" },
-      { text: "stiva inclusa", color: "#1D9E75", border: "#c6f0e0" },
-      { text: "posto scelto", color: "#1D9E75", border: "#c6f0e0" },
-      { text: "rimborsabile", color: "#1D9E75", border: "#c6f0e0" },
+      { text: "stiva", color: "#1D9E75", border: "#c6f0e0" },
+      { text: "posto", color: "#1D9E75", border: "#c6f0e0" },
+      { text: "rimborso", color: "#1D9E75", border: "#c6f0e0" },
     ],
   },
   {
