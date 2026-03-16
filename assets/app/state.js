@@ -29,11 +29,14 @@ export function normalizeState(candidate, datasets) {
   const flightIds = new Set(datasets.flights.map((flight) => flight.id));
   const stayIds = new Set(datasets.stays.map((stay) => stay.id));
   const parkingIds = new Set(datasets.parkingOptions.map((parking) => parking.id));
+  const normalizedFlights = new Set((candidate.flights || []).filter((id) => flightIds.has(id)));
+  const normalizedParking = parkingIds.has(candidate.parking) ? candidate.parking : fallback.parking;
+  const hasParkingEligibleFlight = datasets.flights.some((flight) => normalizedFlights.has(flight.id) && flight.airportParkingNeeded);
 
   return {
-    flights: new Set((candidate.flights || []).filter((id) => flightIds.has(id))),
+    flights: normalizedFlights,
     stays: new Set((candidate.stays || []).filter((id) => stayIds.has(id))),
-    parking: parkingIds.has(candidate.parking) ? candidate.parking : fallback.parking,
+    parking: normalizedParking !== fallback.parking && !hasParkingEligibleFlight ? fallback.parking : normalizedParking,
     sortAsc: candidate.sortAsc !== false,
     collapsed: {
       stays: Boolean(candidate.collapsed?.stays),

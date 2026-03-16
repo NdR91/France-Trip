@@ -1,9 +1,11 @@
-import { getBestPricedCombo, getComboReasons, getComparisonInsights, getParkingOption, getVisibleCombos } from "./domain/combos.js";
+import { getBestPricedCombo, getComboReasons, getComparisonInsights, getParkingOption, getVisibleCombos, hasParkingEligibleFlight } from "./domain/combos.js";
 import { checkIcon, escapeHtml, formatMoneyDecimal, formatMoneyRounded } from "./utils.js";
 
 export function renderAppView({ state, shareMessage, datasets }) {
   const flightHint = getSelectionHint([...state.flights], datasets.flights);
   const stayHint = getSelectionHint([...state.stays], datasets.stays);
+  const parkingEligible = hasParkingEligibleFlight(state, datasets.flights);
+  const parkingCopy = getParkingSectionCopy(state, datasets.flights, parkingEligible);
 
   return `
     ${renderTopDecisionBanner(state, datasets)}
@@ -21,10 +23,10 @@ export function renderAppView({ state, shareMessage, datasets }) {
     })}
     ${renderSelectableSection(state, {
       sectionId: "parking",
-      title: "Parcheggio BLQ · 5 giorni · 2 auto",
-      hint: "Solo con AF Base / AF Full - tocca una card",
-      cards: datasets.parkingOptions.map((parking) => renderParkingCard(state, parking)).join(""),
-      footnote: "Con EasyJet partite da Milano Linate - parcheggio non necessario a Bologna.",
+      title: "Parcheggio Bologna · 5 giorni · 2 auto",
+      hint: parkingCopy.hint,
+      cards: datasets.parkingOptions.map((parking) => renderParkingCard(state, parking, parkingEligible)).join(""),
+      footnote: parkingCopy.footnote,
     })}
     ${renderResultsSection(state, shareMessage, datasets)}
   `;
@@ -48,7 +50,7 @@ function renderTopDecisionBanner(state, datasets) {
       <div>
         <div class="top-decision-label">Scelta migliore ora</div>
         <div class="top-decision-value">${formatMoneyRounded(bestCombo.total)} - ${escapeHtml(bestCombo.flight.label)} + ${escapeHtml(bestCombo.stay.label)}</div>
-        <div class="top-decision-note">E' la combinazione piu economica tra ${comboCountLabel} gia' selezionate.</div>
+        <div class="top-decision-note">E' la combinazione piu economica tra le ${comboCountLabel} gia' nel confronto.</div>
       </div>
       <a class="top-decision-link" href="#results-section">Apri combinazioni</a>
     </section>
@@ -144,16 +146,18 @@ function getFlightLogoClass(flightId) {
   return "";
 }
 
-function renderParkingCard(state, parking) {
-  const selected = state.parking === parking.id;
-  const statusClass = selected ? "included" : "excluded";
-  const statusLabel = selected ? "attivo" : "escluso";
+function renderParkingCard(state, parking, parkingEligible) {
+  const isDisabled = parking.id !== "no" && !parkingEligible;
+  const selected = !isDisabled && state.parking === parking.id;
+  const statusClass = isDisabled ? "disabled" : selected ? "included" : "excluded";
+  const statusLabel = isDisabled ? "solo voli BLQ" : selected ? "attivo" : "disponibile";
   const priceClass = parking.id === "fast-sc" ? "pcard-price best" : "pcard-price";
   const badges = parking.badges.map((badge) => `<span class="mbadge ${badge.className}">${escapeHtml(badge.text)}</span>`).join("");
   const extras = parking.extra.map((extra) => `<div class="kv"><span class="dot b"></span>${escapeHtml(extra)}</div>`).join("");
+  const disabledAttributes = isDisabled ? ' aria-disabled="true" tabindex="-1" data-parking-disabled="true"' : ' tabindex="0"';
 
   return `
-    <article class="sel-card pcard ${selected ? "selected" : "unselected"}" data-parking-id="${parking.id}" aria-pressed="${String(selected)}" role="button" tabindex="0">
+    <article class="sel-card pcard ${selected ? "selected" : "unselected"} ${isDisabled ? "disabled" : ""}" data-parking-id="${parking.id}" aria-pressed="${String(selected)}" role="button"${disabledAttributes}>
       <span class="check-badge">${checkIcon()}</span>
       <div class="pcard-provider">${escapeHtml(parking.label)}</div>
       <div class="pcard-type">${escapeHtml(parking.subtitle)}</div>
@@ -217,7 +221,7 @@ function renderResultsSection(state, shareMessage, datasets) {
       <div class="section-head results-head" style="cursor:default;margin-bottom:12px">
         <div class="section-head-left">
           <span class="section-title">Combinazioni</span>
-          <span class="section-hint">Totale del viaggio, con parcheggio aggiunto solo ai voli da Bologna.</span>
+          <span class="section-hint">Totale viaggio, con parcheggio aggiunto solo alle partenze da Bologna.</span>
         </div>
         <button class="section-action" data-sort-toggle type="button">${state.sortAsc ? "Prezzo crescente" : "Prezzo decrescente"}</button>
       </div>
@@ -291,7 +295,7 @@ function renderEmptyState() {
       <div class="empty-state">
         <div class="empty-state-icon">✈️</div>
         <div class="empty-state-title">Seleziona almeno un volo e un alloggio</div>
-        <div class="empty-state-desc">Tocca le card qui sopra per metterle a confronto. Le preferenze restano salvate nel browser.</div>
+        <div class="empty-state-desc">Tocca le card qui sopra per confrontare le combinazioni. Le preferenze restano salvate nel browser.</div>
         <div class="empty-state-arrows">
           <div class="empty-arrow">✈️ Volo · ○</div>
           <div class="empty-arrow">🏠 Alloggio · ○</div>
@@ -311,7 +315,7 @@ function renderNeedMoreState(hasFlights, hasStays) {
       </div>
       <div class="need-more">
         <div class="need-more-title">Serve ancora un ${missing}</div>
-        <div class="need-more-desc">Aggiungilo al confronto per vedere le combinazioni complete.</div>
+        <div class="need-more-desc">Aggiungilo al confronto per vedere il totale completo.</div>
         <div class="need-more-items">
           <span class="need-pill ${hasFlights ? "done" : ""}">✈️ Volo</span>
           <span class="need-pill ${hasStays ? "done" : ""}">🏠 Alloggio</span>
@@ -376,11 +380,11 @@ function renderComboParkingNote(combo, state, datasets) {
   const parking = getParkingOption(state.parking, datasets.parkingOptions);
 
   if (combo.extraParking > 0) {
-    return `<span class="combo-park-note">incl. ${escapeHtml(parking.label)}</span>`;
+    return `<span class="combo-park-note">con ${escapeHtml(parking.label)}</span>`;
   }
 
   if (combo.flight.airportParkingNeeded && parking.cost === 0) {
-    return '<span class="combo-park-note" style="color:#c8c8c8">+ parcheggio non selezionato</span>';
+    return '<span class="combo-park-note" style="color:#c8c8c8">parcheggio BLQ non selezionato</span>';
   }
 
   return "";
@@ -399,7 +403,7 @@ function renderInsightCard(insight) {
 
 function getSelectionHint(selectedIds, items) {
   if (!selectedIds.length) {
-    return "Nessuna selezione - tocca le card da confrontare";
+    return "Nessuna opzione selezionata - tocca le card da confrontare";
   }
 
   if (selectedIds.length === items.length) {
@@ -408,6 +412,28 @@ function getSelectionHint(selectedIds, items) {
 
   const selectedLabels = items.filter((item) => selectedIds.includes(item.id)).map((item) => item.label);
   return `${selectedLabels.join(", ")} selezionat${selectedIds.length === 1 ? "o" : "i"}`;
+}
+
+function getParkingSectionCopy(state, flights, parkingEligible) {
+  if (!state.flights.size) {
+    return {
+      hint: "Disponibile quando selezioni almeno un volo da Bologna",
+      footnote: "Questi parcheggi coprono solo le partenze da Bologna. Quelli da Milano arriveranno dopo.",
+    };
+  }
+
+  if (!parkingEligible) {
+    return {
+      hint: "Nessun volo da Bologna nel confronto - parcheggi BLQ disattivati",
+      footnote: "I parcheggi di questa sezione valgono solo per voli in partenza da Bologna.",
+    };
+  }
+
+  const selectedBlqCount = flights.filter((flight) => state.flights.has(flight.id) && flight.airportParkingNeeded).length;
+  return {
+    hint: `${selectedBlqCount} ${selectedBlqCount === 1 ? "volo da Bologna attivo" : "voli da Bologna attivi"} - tocca una card`,
+    footnote: "Il parcheggio viene applicato solo alle combinazioni con partenza da Bologna.",
+  };
 }
 
 function getSelectedChips(state, datasets) {

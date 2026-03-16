@@ -2,6 +2,10 @@ export function getParkingOption(id, parkingOptions) {
   return parkingOptions.find((parking) => parking.id === id) || parkingOptions[0];
 }
 
+export function hasParkingEligibleFlight(state, flights) {
+  return flights.some((flight) => state.flights.has(flight.id) && flight.airportParkingNeeded);
+}
+
 export function getVisibleCombos({ state, flights, stays, parkingOptions }) {
   const parking = getParkingOption(state.parking, parkingOptions);
 

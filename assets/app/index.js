@@ -70,6 +70,9 @@ function handleClick(event) {
 
   const parkingCard = target.closest("[data-parking-id]");
   if (parkingCard) {
+    if (parkingCard.dataset.parkingDisabled === "true") {
+      return;
+    }
     state = mergeState(state, { parking: parkingCard.dataset.parkingId }, datasets);
     renderApp();
     return;
@@ -138,6 +141,9 @@ function handleKeyDown(event) {
   } else if (card.dataset.stayId) {
     state = toggleSetItem(state, "stays", card.dataset.stayId);
   } else if (card.dataset.parkingId) {
+    if (card.dataset.parkingDisabled === "true") {
+      return;
+    }
     state = mergeState(state, { parking: card.dataset.parkingId }, datasets);
   }
 

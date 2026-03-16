@@ -59,6 +59,7 @@ Roadmap implementativa del comparatore, costruita sul backlog attuale e su una r
 - rendere il blocco `Nel confronto` piu' compatto e scalabile su mobile
 - portare il miglior risultato piu' vicino all'inizio del flusso
 - fare review cross-device dedicata a mobile density, touch e leggibilita'
+- rifinire gli stati contestuali mobile per parcheggi, caroselli e card disabilitate prima della prossima ondata feature
 
 ### P1 - Miglioramenti ad alto valore
 

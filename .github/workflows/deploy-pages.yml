@@ -35,10 +35,61 @@ jobs:
 
       - name: Prepare public bundle
         run: |
+          VERSION=$(date +%s)
           mkdir -p .deploy
           cp index.html .deploy/index.html
           cp -R assets .deploy/assets
           cp -R data .deploy/data
+          VERSION="$VERSION" python3 <<'PY'
+          import os
+          from pathlib import Path
+
+          version = os.environ["VERSION"]
+          root = Path(".deploy")
+
+          def rewrite(path, replacements):
+            text = path.read_text()
+            for old, new in replacements:
+              text = text.replace(old, new)
+            path.write_text(text)
+
+          rewrite(
+            root / "index.html",
+            [
+              ("assets/app.css?v=dev", f"assets/app.css?v={version}"),
+              ("assets/app.js?v=dev", f"assets/app.js?v={version}"),
+            ],
+          )
+
+          rewrite(root / "assets/app.js", [("./app/index.js", f"./app/index.js?v={version}")])
+          rewrite(
+            root / "assets/app/index.js",
+            [
+              ("../../data/site-data.js", f"../../data/site-data.js?v={version}"),
+              ("./render.js", f"./render.js?v={version}"),
+              ("./state.js", f"./state.js?v={version}"),
+              ("./url-state.js", f"./url-state.js?v={version}"),
+              ("./utils.js", f"./utils.js?v={version}"),
+            ],
+          )
+          rewrite(root / "assets/app/render.js", [("./domain/combos.js", f"./domain/combos.js?v={version}"), ("./utils.js", f"./utils.js?v={version}")])
+          rewrite(root / "assets/app/url-state.js", [("./utils.js", f"./utils.js?v={version}")])
+
+          site_data = root / "data/site-data.js"
+          text = site_data.read_text()
+          text = text.replace("assets/images/", f"assets/images/")
+          for image_name in [
+            "villa-ninon.jpg",
+            "family-duplex.jpg",
+            "celtes1.jpeg",
+            "la-maison-coco.jpg",
+            "easyjet-logo.png",
+            "air-france-logo.png",
+            "swiss-logo.png",
+          ]:
+            text = text.replace(f"assets/images/{image_name}", f"assets/images/{image_name}?v={version}")
+          site_data.write_text(text)
+          PY
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

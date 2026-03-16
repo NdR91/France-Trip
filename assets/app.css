@@ -299,6 +299,19 @@ button.sel-card {
   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.03);
 }
 
+.sel-card.disabled,
+.sel-card.disabled:hover,
+.sel-card.disabled:focus-visible {
+  opacity: 0.56;
+  cursor: not-allowed;
+  border-color: rgba(205, 201, 194, 0.82);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.02);
+}
+
+.sel-card.disabled .check-badge {
+  opacity: 0;
+}
+
 .sel-card.unselected .card-status.excluded {
   color: #c4beb4;
 }
@@ -353,6 +366,11 @@ button.sel-card {
 .card-status.excluded {
   background: #f4f1eb;
   color: #bab3a8;
+}
+
+.card-status.disabled {
+  background: #f4f1eb;
+  color: #b6afa4;
 }
 
 .hcard {
