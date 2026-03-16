@@ -230,6 +230,7 @@ h1 {
 .scroll-row {
   display: flex;
   gap: 12px;
+  align-items: stretch;
   overflow-x: auto;
   padding-bottom: 6px;
   -webkit-overflow-scrolling: touch;
@@ -248,6 +249,8 @@ h1 {
 
 .sel-card {
   position: relative;
+  display: flex;
+  flex-direction: column;
   flex-shrink: 0;
   border-radius: 14px;
   border: 1.5px solid var(--border);
@@ -325,9 +328,11 @@ button.sel-card {
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  width: 100%;
   padding: 4px 8px;
   border-radius: 0 0 12px 12px;
   text-align: center;
+  margin-top: auto;
 }
 
 .card-status.included {
@@ -377,6 +382,8 @@ button.sel-card {
 .hcard-body,
 .fcard,
 .pcard {
+  display: flex;
+  flex-direction: column;
   padding: 12px;
 }
 
@@ -461,6 +468,13 @@ button.sel-card {
   flex-wrap: wrap;
   gap: 4px;
   margin-top: 7px;
+}
+
+.fcard .pills,
+.pcard .mbadge:last-of-type,
+.pcard .kv:last-of-type,
+.pcard .pcard-note:last-of-type {
+  margin-bottom: 0;
 }
 
 .pill,
