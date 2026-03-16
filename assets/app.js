@@ -1,6 +1,7 @@
 import { FLIGHTS, PARKING_OPTIONS, STAYS, TRIP_META } from "../data/site-data.js";
 
 const STORAGE_KEY = "france-trip-comparator-state";
+let sectionScrollPositions = {};
 
 const state = loadState();
 
@@ -59,6 +60,8 @@ function persistState() {
 }
 
 function renderApp() {
+  captureSectionScrollPositions();
+
   const flightHint = getSelectionHint([...state.flights], FLIGHTS, "flight");
   const stayHint = getSelectionHint([...state.stays], STAYS, "stay");
 
@@ -87,8 +90,29 @@ function renderApp() {
 
   syncCollapsedSections();
   bindInteractions();
+  restoreSectionScrollPositions();
   persistState();
   updateMeta();
+}
+
+function captureSectionScrollPositions() {
+  sectionScrollPositions = getSectionScrollRows().reduce((positions, row) => {
+    positions[row.dataset.scrollRow] = row.scrollLeft;
+    return positions;
+  }, {});
+}
+
+function restoreSectionScrollPositions() {
+  getSectionScrollRows().forEach((row) => {
+    const savedPosition = sectionScrollPositions[row.dataset.scrollRow];
+    if (typeof savedPosition === "number") {
+      row.scrollLeft = savedPosition;
+    }
+  });
+}
+
+function getSectionScrollRows() {
+  return [...appElement.querySelectorAll("[data-scroll-row]")];
 }
 
 function updateMeta() {
@@ -265,7 +289,7 @@ function renderSelectableSection({ sectionId, title, hint, cards, footnote = "" 
         <span class="section-toggle ${state.collapsed[sectionId] ? "collapsed" : ""}" data-section-icon="${sectionId}">▾</span>
       </div>
       <div class="section-body ${state.collapsed[sectionId] ? "collapsed" : ""}" data-section-body="${sectionId}">
-        <div class="scroll-row">${cards}</div>
+        <div class="scroll-row" data-scroll-row="${sectionId}">${cards}</div>
         ${footnote ? `<p class="footnote">${escapeHtml(footnote)}</p>` : ""}
       </div>
     </section>
