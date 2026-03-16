@@ -104,15 +104,28 @@ function renderFlightCard(state, flight) {
   const selected = state.flights.has(flight.id);
   const statusClass = selected ? "included" : "excluded";
   const statusLabel = selected ? "in confronto" : "escluso";
+  const logo = flight.logo
+    ? `<img class="fcard-logo" src="${flight.logo}" alt="${escapeHtml(flight.airlineLabel || flight.label)}">`
+    : `<span class="fcard-logo-fallback">${escapeHtml((flight.airlineLabel || flight.label).slice(0, 2).toUpperCase())}</span>`;
 
   return `
     <article class="sel-card fcard ${selected ? "selected" : "unselected"}" data-flight-id="${flight.id}" aria-pressed="${String(selected)}" role="button" tabindex="0">
       <span class="check-badge">${checkIcon()}</span>
-      <div class="fcard-name">${escapeHtml(flight.label)}</div>
+      <div class="fcard-brand">
+        ${logo}
+        <div>
+          <div class="fcard-name">${escapeHtml(flight.label)}</div>
+          <div class="fcard-brand-sub">${escapeHtml(flight.airlineLabel || flight.label)}</div>
+        </div>
+      </div>
       <div class="fcard-sub">${escapeHtml(flight.route)} · ${escapeHtml(flight.departureCity)}</div>
       <div class="fcard-price">${formatMoneyRounded(flight.totalCost)}</div>
       <div class="fcard-ppp">${formatMoneyDecimal(flight.perPerson)} / persona</div>
       ${flight.schedule.map((row) => `<div class="fcard-row">${escapeHtml(row)}</div>`).join("")}
+      <div class="fcard-meta">
+        <div class="fcard-meta-row"><span class="dot b"></span>durata ${escapeHtml(flight.durationLabel)}</div>
+        <div class="fcard-meta-row"><span class="dot ${flight.stopLabel === "nessuno scalo" ? "g" : "o"}"></span>${escapeHtml(flight.stopLabel)}</div>
+      </div>
       <div class="pills">${flight.pills.map(renderStyledPill).join("")}</div>
       <div class="card-status ${statusClass}">${statusLabel}</div>
     </article>
