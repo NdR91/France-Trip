@@ -884,25 +884,37 @@ button.sel-card {
     flex-direction: column;
     gap: 6px;
     flex-basis: 100%;
+    min-width: 0;
   }
 
   .sel-bar-actions {
     width: 100%;
     justify-content: flex-start;
     gap: 16px;
+    margin-left: 0;
   }
 
   .sel-chips {
     width: 100%;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: 4px;
+    flex-wrap: wrap;
+    overflow-x: visible;
+    padding-bottom: 0;
+    min-width: 0;
   }
 
   .sel-chip {
     max-width: 100%;
-    flex: 0 0 auto;
-    white-space: nowrap;
+    flex: 0 1 auto;
+    white-space: normal;
+  }
+
+  .summary-bar {
+    gap: 14px;
+  }
+
+  .summary-bar > div {
+    flex: 1 1 calc(50% - 14px);
+    min-width: 0;
   }
 
   .hcard {
