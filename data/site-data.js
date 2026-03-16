@@ -2,23 +2,6 @@ export const TRIP_META = {
   title: "Comparatore Parigi",
   subtitle: "5 - 9 settembre 2026 · 9 persone (6 adulti + 3 bambini) · 4 notti",
   peopleCount: 9,
-  publicScopeLabel: "Versione condivisibile",
-  publicScopeNote:
-    "Questa pagina e' pensata per confronto opzioni e programma generale. Biglietti, codici prenotazione, nominativi e dettagli sensibili vanno tenuti fuori da questo sito pubblico.",
-};
-
-export const PUBLIC_BOUNDARY = {
-  safe: [
-    "confronto costi e alternative",
-    "date e logistica generale",
-    "link pubblici a fonti come Booking o Airbnb",
-    "note sintetiche utili alla decisione del gruppo",
-  ],
-  private: [
-    "biglietti e codici prenotazione",
-    "nomi, contatti e assegnazioni del gruppo",
-    "documenti, check-in e dettagli operativi sensibili",
-  ],
 };
 
 export const STAYS = [
@@ -32,6 +15,7 @@ export const STAYS = [
     bannerColor: "#1D9E75",
     providerLabel: "Booking",
     providerType: "hotel",
+    image: "assets/images/villa-ninon.jpg",
     link: "https://www.booking.com/hotel/fr/villa-ninon-disneyland.it.html",
     flexibilityLabel: "molto flessibile",
     flexibilityScore: 3,
@@ -57,6 +41,7 @@ export const STAYS = [
     bannerColor: "#D85A30",
     providerLabel: "Booking",
     providerType: "apartment",
+    image: "assets/images/family-duplex.jpg",
     link: "https://www.booking.com/hotel/fr/family-duplex-disneyland-paris-rentaway-bnb.it.html",
     flexibilityLabel: "flessibile",
     flexibilityScore: 3,
@@ -82,6 +67,7 @@ export const STAYS = [
     bannerColor: "#7F77DD",
     providerLabel: "Airbnb",
     providerType: "home",
+    image: "assets/images/celtes1.jpeg",
     link: "https://www.airbnb.it/rooms/920072979962574353",
     flexibilityLabel: "molto flessibile",
     flexibilityScore: 3,
@@ -108,6 +94,7 @@ export const STAYS = [
     bannerColor: "#378ADD",
     providerLabel: "Booking",
     providerType: "house",
+    image: "assets/images/la-maison-coco.jpg",
     link: "https://www.booking.com/hotel/fr/la-maison-coco-a-8min-de-disneyland-paris.it.html",
     flexibilityLabel: "flessibile",
     flexibilityScore: 3,

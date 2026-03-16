@@ -1,4 +1,4 @@
-import { FLIGHTS, PARKING_OPTIONS, PUBLIC_BOUNDARY, STAYS, TRIP_META } from "../data/site-data.js";
+import { FLIGHTS, PARKING_OPTIONS, STAYS, TRIP_META } from "../data/site-data.js";
 
 const STORAGE_KEY = "france-trip-comparator-state";
 
@@ -63,7 +63,6 @@ function renderApp() {
   const stayHint = getSelectionHint([...state.stays], STAYS, "stay");
 
   appElement.innerHTML = `
-    ${renderBoundaryPanel()}
     ${renderSelectableSection({
       sectionId: "stays",
       title: "Alloggi - seleziona quelli da confrontare",
@@ -90,27 +89,6 @@ function renderApp() {
   bindInteractions();
   persistState();
   updateMeta();
-}
-
-function renderBoundaryPanel() {
-  return `
-    <section class="scope-panel" aria-label="Perimetro contenuti pubblici">
-      <div class="scope-copy">
-        <p class="scope-kicker">${escapeHtml(TRIP_META.publicScopeLabel)}</p>
-        <p class="scope-note">${escapeHtml(TRIP_META.publicScopeNote)}</p>
-      </div>
-      <div class="scope-grid">
-        <div class="scope-card">
-          <div class="scope-title">Ok sul sito</div>
-          <div class="scope-list">${PUBLIC_BOUNDARY.safe.map((item) => renderScopePill(item, "safe")).join("")}</div>
-        </div>
-        <div class="scope-card scope-card-alert">
-          <div class="scope-title">Da tenere fuori</div>
-          <div class="scope-list">${PUBLIC_BOUNDARY.private.map((item) => renderScopePill(item, "private")).join("")}</div>
-        </div>
-      </div>
-    </section>
-  `;
 }
 
 function updateMeta() {
@@ -301,8 +279,12 @@ function renderStayCard(stay) {
 
   return `
     <article class="sel-card hcard ${selected ? "selected" : "unselected"}" data-stay-id="${stay.id}" aria-pressed="${String(selected)}" role="button" tabindex="0">
+      <div class="hcard-media">
+        <img class="hcard-image" src="${stay.image}" alt="${escapeHtml(stay.name)}">
+        <div class="hcard-media-overlay"></div>
+        <div class="hcard-banner" style="background:${stay.bannerColor}"></div>
+      </div>
       <span class="check-badge">${checkIcon()}</span>
-      <div class="hcard-banner" style="background:${stay.bannerColor}"></div>
       <div class="hcard-body">
         <div class="hcard-name">${escapeHtml(stay.name)}</div>
         <div class="hcard-loc">${escapeHtml(stay.location)}</div>
@@ -695,10 +677,6 @@ function renderSelectableChip(type, id, label) {
       <button class="sel-chip-x" data-remove-chip="${id}" data-remove-chip-type="${type}" type="button" aria-label="Rimuovi ${escapeHtml(label)}">✕</button>
     </span>
   `;
-}
-
-function renderScopePill(text, type) {
-  return `<span class="scope-pill ${type}">${escapeHtml(text)}</span>`;
 }
 
 function getParkingOption(id) {
