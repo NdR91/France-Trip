@@ -10,6 +10,10 @@ Comparatore statico per valutare rapidamente le opzioni di volo, alloggio e parc
 - sintesi decisionale con opzione piu economica, piu comoda e logistica Disneyland
 - struttura pronta per pubblicazione su GitHub Pages
 
+## Roadmap
+
+- roadmap implementativa completa in `ROADMAP.md`
+
 ## Struttura
 
 - `index.html` - shell della pagina

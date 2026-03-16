@@ -66,6 +66,7 @@ function renderApp() {
   const stayHint = getSelectionHint([...state.stays], STAYS, "stay");
 
   appElement.innerHTML = `
+    ${renderTopDecisionBanner()}
     ${renderSelectableSection({
       sectionId: "stays",
       title: "Alloggi - seleziona quelli da confrontare",
@@ -93,6 +94,31 @@ function renderApp() {
   restoreSectionScrollPositions();
   persistState();
   updateMeta();
+}
+
+function renderTopDecisionBanner() {
+  if (!state.flights.size || !state.stays.size) {
+    return "";
+  }
+
+  const combos = getVisibleCombos();
+  if (!combos.length) {
+    return "";
+  }
+
+  const bestCombo = getBestPricedCombo(combos);
+  const comboCountLabel = `${combos.length} ${combos.length === 1 ? "combinazione" : "combinazioni"}`;
+
+  return `
+    <section class="top-decision">
+      <div>
+        <div class="top-decision-label">Decisione rapida</div>
+        <div class="top-decision-value">${formatMoneyRounded(bestCombo.total)} - ${escapeHtml(bestCombo.flight.label)} + ${escapeHtml(bestCombo.stay.label)}</div>
+        <div class="top-decision-note">Miglior prezzo attuale con ${comboCountLabel} nel confronto.</div>
+      </div>
+      <a class="top-decision-link" href="#results-section">Vai al confronto</a>
+    </section>
+  `;
 }
 
 function captureSectionScrollPositions() {
@@ -618,7 +644,7 @@ function getComparisonInsights(combos) {
     return [];
   }
 
-  const cheapest = combos[0];
+  const cheapest = getBestPricedCombo(combos);
   const mostComfortable = [...combos].sort((left, right) => right.convenienceScore - left.convenienceScore || left.total - right.total)[0];
   const bestDisney = [...combos].sort((left, right) => right.stay.disneyAccessScore - left.stay.disneyAccessScore || left.total - right.total)[0];
 
@@ -705,6 +731,10 @@ function renderSelectableChip(type, id, label) {
 
 function getParkingOption(id) {
   return PARKING_OPTIONS.find((parking) => parking.id === id) || PARKING_OPTIONS[0];
+}
+
+function getBestPricedCombo(combos) {
+  return [...combos].sort((left, right) => left.total - right.total)[0];
 }
 
 function checkIcon() {

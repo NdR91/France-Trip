@@ -50,6 +50,47 @@ a {
   margin-bottom: 18px;
 }
 
+.top-decision {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+  padding: 14px 16px;
+  border: 1px solid rgba(24, 95, 165, 0.14);
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(24, 95, 165, 0.09), rgba(255, 255, 255, 0.96));
+  box-shadow: var(--shadow);
+}
+
+.top-decision-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 6px;
+}
+
+.top-decision-value {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.top-decision-note {
+  margin-top: 4px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.top-decision-link {
+  flex-shrink: 0;
+  color: var(--blue);
+  text-decoration: none;
+  font-weight: 600;
+}
+
 .eyebrow {
   font-size: 11px;
   font-weight: 600;
@@ -174,6 +215,8 @@ h1 {
   overflow-x: auto;
   padding-bottom: 6px;
   -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+  scroll-padding-left: 2px;
 }
 
 .scroll-row::-webkit-scrollbar {
@@ -194,6 +237,7 @@ h1 {
   text-align: left;
   transition: border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.1s ease;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  scroll-snap-align: start;
 }
 
 button.sel-card {
@@ -807,6 +851,16 @@ button.sel-card {
     padding: 18px 14px 40px;
   }
 
+  .top-decision {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px 14px;
+  }
+
+  .top-decision-value {
+    font-size: 16px;
+  }
+
   .roadmap-note {
     padding: 8px 12px;
     margin-bottom: 6px;
@@ -826,21 +880,64 @@ button.sel-card {
   }
 
   .sel-bar-main {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
     flex-basis: 100%;
   }
 
   .sel-bar-actions {
     width: 100%;
-    justify-content: flex-end;
+    justify-content: flex-start;
     gap: 16px;
   }
 
   .sel-chips {
     width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 4px;
   }
 
   .sel-chip {
     max-width: 100%;
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .hcard {
+    min-width: 292px;
+    max-width: 292px;
+  }
+
+  .hcard-media {
+    height: 116px;
+  }
+
+  .hcard-body {
+    padding: 10px 10px 8px;
+  }
+
+  .hcard-price {
+    font-size: 16px;
+  }
+
+  .hcard .divr,
+  .hcard .divr ~ .kv {
+    display: none;
+  }
+
+  .hcard .pills {
+    margin-top: 6px;
+  }
+
+  .hcard .pill:nth-child(n + 5) {
+    display: none;
+  }
+
+  .card-link {
+    margin-top: 6px;
+    padding-top: 6px;
   }
 
   .combo-total-val,
