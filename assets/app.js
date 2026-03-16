@@ -69,20 +69,20 @@ function renderApp() {
     ${renderTopDecisionBanner()}
     ${renderSelectableSection({
       sectionId: "stays",
-      title: "Alloggi - seleziona quelli da confrontare",
+      title: "Alloggi da confrontare",
       hint: stayHint,
       cards: STAYS.map((stay) => renderStayCard(stay)).join(""),
     })}
     ${renderSelectableSection({
       sectionId: "flights",
-      title: "Voli - seleziona quelli da confrontare",
+      title: "Voli da confrontare",
       hint: flightHint,
       cards: FLIGHTS.map((flight) => renderFlightCard(flight)).join(""),
     })}
     ${renderSelectableSection({
       sectionId: "parking",
-      title: "Parcheggio BLQ · 5gg × 2 auto",
-      hint: "Solo con AF Base / AF Full - tocca per selezionare",
+      title: "Parcheggio BLQ · 5 giorni · 2 auto",
+      hint: "Solo con AF Base / AF Full - tocca una card",
       cards: PARKING_OPTIONS.map((parking) => renderParkingCard(parking)).join(""),
       footnote: "Con EasyJet partite da Milano Linate - parcheggio non necessario a Bologna.",
     })}
@@ -114,7 +114,7 @@ function renderTopDecisionBanner() {
       <div>
         <div class="top-decision-label">Scelta migliore ora</div>
         <div class="top-decision-value">${formatMoneyRounded(bestCombo.total)} - ${escapeHtml(bestCombo.flight.label)} + ${escapeHtml(bestCombo.stay.label)}</div>
-        <div class="top-decision-note">Prezzo piu basso tra ${comboCountLabel} gia' selezionate.</div>
+        <div class="top-decision-note">E' la combinazione piu economica tra ${comboCountLabel} gia' selezionate.</div>
       </div>
       <a class="top-decision-link" href="#results-section">Apri combinazioni</a>
     </section>
@@ -325,7 +325,7 @@ function renderSelectableSection({ sectionId, title, hint, cards, footnote = "" 
 function renderStayCard(stay) {
   const selected = state.stays.has(stay.id);
   const statusClass = selected ? "included" : "excluded";
-  const statusLabel = selected ? "nel confronto" : "escluso";
+  const statusLabel = selected ? "in confronto" : "escluso";
 
   return `
     <article class="sel-card hcard ${selected ? "selected" : "unselected"}" data-stay-id="${stay.id}" aria-pressed="${String(selected)}" role="button" tabindex="0">
@@ -352,7 +352,7 @@ function renderStayCard(stay) {
 function renderFlightCard(flight) {
   const selected = state.flights.has(flight.id);
   const statusClass = selected ? "included" : "excluded";
-  const statusLabel = selected ? "nel confronto" : "escluso";
+  const statusLabel = selected ? "in confronto" : "escluso";
 
   return `
     <article class="sel-card fcard ${selected ? "selected" : "unselected"}" data-flight-id="${flight.id}" aria-pressed="${String(selected)}" role="button" tabindex="0">
@@ -371,7 +371,7 @@ function renderFlightCard(flight) {
 function renderParkingCard(parking) {
   const selected = state.parking === parking.id;
   const statusClass = selected ? "included" : "excluded";
-  const statusLabel = selected ? "selezionato" : "escluso";
+  const statusLabel = selected ? "attivo" : "escluso";
   const priceClass = parking.id === "fast-sc" ? "pcard-price best" : "pcard-price";
   const badges = parking.badges.map((badge) => `<span class="mbadge ${badge.className}">${escapeHtml(badge.text)}</span>`).join("");
   const extras = parking.extra
@@ -443,9 +443,9 @@ function renderResultsSection() {
       <div class="section-head results-head" style="cursor:default;margin-bottom:12px">
         <div class="section-head-left">
           <span class="section-title">Combinazioni</span>
-          <span class="section-hint">Totale viaggio, con parcheggio aggiunto solo ai voli da Bologna.</span>
+          <span class="section-hint">Totale del viaggio, con parcheggio aggiunto solo ai voli da Bologna.</span>
         </div>
-        <button class="section-action" data-sort-toggle type="button">${state.sortAsc ? "prezzo ↑" : "prezzo ↓"}</button>
+        <button class="section-action" data-sort-toggle type="button">${state.sortAsc ? "Prezzo crescente" : "Prezzo decrescente"}</button>
       </div>
 
       <div id="results-section" class="results-shell">
@@ -515,7 +515,7 @@ function renderEmptyState() {
       <div class="empty-state">
         <div class="empty-state-icon">✈️</div>
         <div class="empty-state-title">Seleziona almeno un volo e un alloggio</div>
-        <div class="empty-state-desc">Tocca le card nelle sezioni qui sopra per includerle nel confronto. Le preferenze restano salvate nel browser.</div>
+        <div class="empty-state-desc">Tocca le card qui sopra per metterle a confronto. Le preferenze restano salvate nel browser.</div>
         <div class="empty-state-arrows">
           <div class="empty-arrow">✈️ Volo · ○</div>
           <div class="empty-arrow">🏠 Alloggio · ○</div>
@@ -534,8 +534,8 @@ function renderNeedMoreState(hasFlights, hasStays) {
         <span class="section-title">Combinazioni</span>
       </div>
       <div class="need-more">
-        <div class="need-more-title">Manca ancora qualcosa</div>
-        <div class="need-more-desc">Seleziona anche un ${missing} per vedere le combinazioni complete.</div>
+        <div class="need-more-title">Serve ancora un ${missing}</div>
+        <div class="need-more-desc">Aggiungilo al confronto per vedere le combinazioni complete.</div>
         <div class="need-more-items">
           <span class="need-pill ${hasFlights ? "done" : ""}">✈️ Volo</span>
           <span class="need-pill ${hasStays ? "done" : ""}">🏠 Alloggio</span>
@@ -657,12 +657,12 @@ function getComparisonInsights(combos) {
     {
       title: "Piu comoda",
       value: `${mostComfortable.flight.label} + ${mostComfortable.stay.label}`,
-      note: "Equilibrio migliore tra volo, flessibilita' e accesso ai parchi.",
+      note: "L'opzione piu equilibrata tra volo, flessibilita' e accesso ai parchi.",
     },
     {
-      title: "Disney piu facile",
+      title: "Accesso Disney",
       value: bestDisney.stay.label,
-      note: bestDisney.stay.parisAccessLabel,
+      note: bestDisney.stay.destinationNote,
     },
   ];
 }
@@ -688,11 +688,11 @@ function getComboReasons(combo) {
 
 function getSelectionHint(selectedIds, items, type) {
   if (!selectedIds.length) {
-    return "Nessuna selezione · tocca le card da includere";
+    return "Nessuna selezione - tocca le card da confrontare";
   }
 
   if (selectedIds.length === items.length) {
-    return "Tutti selezionati";
+    return "Tutte le opzioni sono nel confronto";
   }
 
   const selectedLabels = items

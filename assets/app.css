@@ -3,6 +3,7 @@
   --white: #fff;
   --surface: rgba(255, 255, 255, 0.92);
   --surface-soft: rgba(255, 255, 255, 0.78);
+  --surface-strong: rgba(255, 255, 255, 0.98);
   --border: #e8e7e4;
   --border-strong: #1a1a1a;
   --text: #1a1a1a;
@@ -24,8 +25,12 @@
   --warning-border: #f6d7a6;
   --success-soft: #edfaf5;
   --success-border: #bdebd9;
+  --success-text: #0a7f5a;
   --chip-bg: #f3f1ec;
   --chip-text: #4b4b4b;
+  --label: #b0aca3;
+  --label-strong: #8a8378;
+  --ink-soft: #65615a;
   --line-soft: #ece8df;
   --shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
   --mono: "DM Mono", monospace;
@@ -81,7 +86,7 @@ a {
 .top-decision-label {
   font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--blue);
   margin-bottom: 6px;
@@ -91,6 +96,7 @@ a {
   font-size: 18px;
   font-weight: 600;
   line-height: 1.35;
+  max-width: 28ch;
 }
 
 .top-decision-note {
@@ -189,7 +195,7 @@ h1 {
 .section-title {
   font-size: 10px;
   font-weight: 600;
-  color: #b0aca3;
+  color: var(--label);
   letter-spacing: 0.07em;
   text-transform: uppercase;
 }
@@ -197,7 +203,8 @@ h1 {
 .section-hint,
 .section-action {
   font-size: 11px;
-  color: #726d66;
+  color: var(--ink-soft);
+  line-height: 1.45;
 }
 
 .section-action {
@@ -206,6 +213,7 @@ h1 {
   cursor: pointer;
   color: var(--blue);
   padding: 0;
+  font-weight: 500;
 }
 
 .section-toggle {
@@ -254,7 +262,7 @@ h1 {
   flex-shrink: 0;
   border-radius: 14px;
   border: 1.5px solid var(--border);
-  background: var(--white);
+  background: var(--surface-strong);
   text-align: left;
   transition: border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.1s ease;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
@@ -287,6 +295,8 @@ button.sel-card {
 
 .sel-card.unselected {
   opacity: 0.92;
+  border-color: rgba(205, 201, 194, 0.95);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.03);
 }
 
 .sel-card.unselected .card-status.excluded {
@@ -300,7 +310,7 @@ button.sel-card {
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: #e8e7e4;
+  background: var(--chip-bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -407,6 +417,7 @@ button.sel-card {
 .fcard-ppp {
   font-size: 10px;
   color: var(--muted);
+  line-height: 1.45;
 }
 
 .hcard-loc,
@@ -434,7 +445,7 @@ button.sel-card {
 .pcard-note,
 .cgrid-note {
   font-size: 10px;
-  color: #65615a;
+  color: var(--ink-soft);
   line-height: 1.45;
 }
 
@@ -486,6 +497,7 @@ button.sel-card {
   gap: 4px;
   border-radius: 999px;
   font-size: 9px;
+  font-weight: 500;
   line-height: 1;
 }
 
@@ -502,15 +514,21 @@ button.sel-card {
   padding: 3px 7px;
 }
 
+.mbadge {
+  border: 1px solid #e7e2d8;
+  background: #fbf9f4;
+}
+
 .summary-pill {
   border: 1px solid #e5edf7;
   background: #f7fbff;
   color: #4f5f74;
+  font-size: 10px;
 }
 
 .mbadge.best {
   background: var(--success-soft);
-  color: #0a7f5a;
+  color: var(--success-text);
   border: 1px solid var(--success-border);
 }
 
@@ -524,6 +542,7 @@ button.sel-card {
 .combo-link {
   color: var(--blue);
   text-decoration: none;
+  font-weight: 500;
 }
 
 .card-link {
@@ -560,6 +579,7 @@ button.sel-card {
   font-size: 10px;
   color: #8f887d;
   margin-top: 8px;
+  line-height: 1.45;
 }
 
 .empty-state,
@@ -669,7 +689,7 @@ button.sel-card {
 .sel-bar-label,
 .stat-lbl {
   font-size: 9px;
-  color: #b2aca1;
+  color: var(--label-strong);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -798,15 +818,16 @@ button.sel-card {
 }
 
 .combo-name {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   line-height: 1.35;
 }
 
 .combo-route {
   font-size: 10px;
-  color: var(--muted);
+  color: var(--ink-soft);
   margin-top: 2px;
+  line-height: 1.45;
 }
 
 .combo-total-val {
@@ -842,7 +863,7 @@ button.sel-card {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
-  border-top: 1px solid #f0f0ee;
+  border-top: 1px solid var(--line-soft);
   padding-top: 10px;
 }
 
@@ -852,13 +873,12 @@ button.sel-card {
 
 .cgrid-val {
   font-size: 12px;
-  font-weight: 500;
-  font-family: var(--mono);
+  font-weight: 600;
   margin-top: 2px;
 }
 
 .tag-best {
-  background: #dbeafe;
+  background: #deebff;
   color: #1f57a8;
   margin-left: 6px;
   vertical-align: middle;
